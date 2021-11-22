@@ -1,0 +1,939 @@
+---
+title: "226305b PL WS21/22"
+author: Clara Waldbauer, cw116; Corinna Pretzer, cp064; Elena Paul, ep035; Elisa Gorontzy,
+  eg040; Michelle Keller, mk347; Paula Agarwalla, pa020
+subtitle: 'Forschungsbericht zum Netzwerk #allesdichtmachen'
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+## Schauspieler*innen-Netzwerk #alledichtmachen-Kampagne
+Codebuch Stand 2021-10 erstellt von Clara Waldbauer, Corinna Pretzer, Elena Paul, Elisa Gorontzy, Michelle Keller, Paula Agarwalla
+
+
+**Github**
+https://github.com/Pa020-svg
+**Codebuch**
+https://raw.githubusercontent.com/Pa020-svg/allesdichtmachen-neu/main/Codebuch.Rmd
+**Edgelist**
+https://raw.githubusercontent.com/Pa020-svg/allesdichtmachen-neu/main/%23allesdichtmachen_Edge-%20und%20Nodelist%20-%20Edgelist.csv
+**Nodelist**
+https://raw.githubusercontent.com/Pa020-svg/allesdichtmachen-neu/main/%23allesdichtmachen_Edge-%20und%20Nodelist%20-%20Nodelist-3.csv
+
+
+
+```{r Netzwerk einlesen, echo=FALSE, fig.hight=30, fig.width=50, message=FALSE, warning=TRUE, paged.print=FALSE}
+
+library(tidyverse)
+library(igraph)
+# Erstellt das Netzwerk aus der Edge- und Nodelists. 
+
+# Einlesen der Edge- und Nodelist
+el <- read.csv("https://raw.githubusercontent.com/Pa020-svg/allesdichtmachen-neu/main/%23allesdichtmachen_Edge-%20und%20Nodelist%20-%20Edgelist.csv", header=T, as.is=T, sep = ",")
+nodes <- read.csv("https://raw.githubusercontent.com/Pa020-svg/allesdichtmachen-neu/main/%23allesdichtmachen_Edge-%20und%20Nodelist%20-%20Nodelist-3.csv", header=T, as.is=T, sep = ",")
+
+# Matrix erstellen
+edgematrix <-as.matrix(el)
+```
+**Einleitung**
+
+In diesem Forschungsbericht können Leser:innen einen Überblick über die Verbindungen unter den Teilnehmer:innen der YouTube Aktion #allesdichtmachen gewinnen. Ausgangspunkt unserer Untersuchungen ist das Gesamtnetzwerk aus 52 deutschsprachigen Schauspieler:innen und/oder Regisseur:innen, die sich Ende April 2021 mit Satire-Videos gegen die Corona-Politik der Regierung äußerten. Die Darsteller:innen zeigen sich meistens alleine in ihrer Wohnung. Zu Beginn stellen sie sich mit ihrem Namen, Künstlernamen und ihrer Berufsbeschreibung vor. Dann folgen Statements, in denen sie ein bedrückendes, von Angst und Misstrauen durchzogenes Leben im Lockdown beschreiben. Mit sarkastischem Unterton rufen alle Darsteller:innen vorbehaltlos dazu auf, die zum Schutz vor der Corona-Pandemie erlassenen Maßnahmen der Bundesregierung zu unterstützen. Dabei werden gesellschaftliche Missstände durch die Pandemie als Erfolg dargestellt: Etwa die Einsamkeit der Menschen (Nina Proll), familiäre Gewalt infolge von Schulschließungen (Felix Klare), und soziale Ungerechtigkeiten (Jan Josef Liefers) werden zum Thema. Damit sorgt die Aktion für mediales Aufsehen und eine kontroverse Debatte.
+Unser Bericht berücksichtigt bei der Netzwerkanalyse verschiedene Forschungstätigkeiten im Zeitraum zwischen August und Oktober 2021, die unter anderem eine Datensammlung, Datenbereinigung und Datenanalyse umfassen. Den Erhebungszeitraum der Daten begrenzen wir auf Filme, Serien und Theaterstücke ab 2000, damit das Netzwerk übersichtlich bleibt.
+Aus der Lehrveranstaltung „Theorie der sozialen Netzwerke“ ziehen wir hilfreiche Werkzeuge, um unsere Daten gesammelt festzuhalten. Wir legen Tabellen wie die Edgelist an. Diese gibt uns Aufschluss über die Verbindungen unter den Schauspieler:innen. Vorangegangen ist eine Sammlung an Spielfilmen, Serien und Theaterstücken, die wir darauf überprüften, wer mit wem schon im gleichen Stück zu selben Zeit zusammen spielte. Hindernisse waren doppelte Leerzeichen, Rechtschreibfehler und Ähnliches, die wir bereinigen mussten. Zudem haben wir eine zweite Tabelle, die Nodelist angelegt. Für daraus resultierende Ergebnisse sammeln wir neben soziodemografischen Daten (name, age, sex und home) auch Wissen über Verhaltensmuster. Bei Letzterem haben wir uns auf die Werte geeinigt, die den Arbeitstitel der Teilnehmer:innen beschreiben (job title), die die Anzahl der gespielten Filme, Serien und Theaterstücke festhalten (films). Außerdem halten wir fest, wer sich von dem Projekt #allesdichtmachen mittlerweile distanziert hat, indem wir die Youtube-Videos jeweils auf sichtbar (online) oder gelöscht (offline) überprüfen. Außerdem definieren wir die Reichweite der Akteur:innen anhand der Aufrufe ihres Videos im Netz (range). Für wichtig halten wir auch, ob die Teilnehmer:innen jemals an einem Tatort mitgewirkt haben (tatort) und halten das Ergebnis in der Nodelist fest. Alle Definitionen der Werte haben wir in unserem Codebuch angegeben, damit sie von keinem missinterpretiert werden können und uns zu eindeutigen Ergebnissen führen. In die Datenanalyse sind wir dann mit folgender Annahme gestartet, dass die Initiatoren von #allesdichtmachen die zentralen Akteure des Netzwerks sein könnten. Darum nehmen wir ihre Berührungspunkte mit anderen Teilnehmern aus der Unterhaltungsszene genauer unter die Lupe. Insgesamt interessieren uns auf der Beziehungsebene, wer mit wem in welchem Film, in welcher Serie oder in welchem Theaterstück innerhalb des Netzwerks zusammenarbeitet. Außerdem berücksichtigen wir Überschneidungen derselben Agenturen unter den Schauspieler:innen.
+Welche Serie ist die Hauptspielstätte, über die Verbindungen untereinander geknüpft worden sind? Wer sind die Hauptakteur:innen mit den meisten Kontakten unter den Teilnehmer:innen? Lassen sich Cliquen ausmachen, wer weiterhin für die Aktion einsteht oder sich davon distanziert? – Das sind Leitfragen des vorliegenden Forschungsberichtes, die anhand unserer Netzwerkanalyse beantwortet werden.
+
+**Vorherige Arbeiten und vergleichbare Studien**
+
+**Forschungsstand**
+ 
+Das Forschungsdesign lehnt sich zum einen an die neuere Netzwerkanalyse an. Anders als die vorangegangenen Studien versuchen Forscher der letzten zwei Jahrzehnte den Zusammenhang zwischen Makro- und Mikrophänomenen zu klären, also wie gesellschaftliche Strukturen und Handlungen voneinander abhängen (Stegbauer & Häußling, 2010). Die Analyse der einzelnen Eigenschaften und daraus resultierenden Beziehungen sind vor allem für Sozialwissenschaftler interessant. So haben zum Beispiel Charles Tilly und Roger Gould erforscht, welche sozialen Muster und Gegebenheiten für die Entstehung und den Erhalt von Kleingruppen eine Rolle spielen (Fuhse, 2008). Untersucht wurden dabei Protestbewegungen in sozialen Netzwerken. Hier müssen besonders die Strukturen und die Abgrenzungen der Netzwerke beachtet werden, anders als bei der traditionellen Netzwerkanalyse (Jansen, 2003). Kleinere, überschaubare Gruppen können durch einfache Beobachtung analysiert werden. In diesem Sinne hat Gould mit seiner Forschung belegen können, dass der Protest der Pariser Commune von 1971 seine strukturelle Basis in erster Linie in den klassenübergreifenden lokalen Netzwerken der Pariser Vororte hatte und nicht in den Berufsgruppen der Handwerker, die normalerweise Träger der Arbeiterproteste waren (Fuhse, 2008). Kollektive Einstellungen und Handlungen leiten sich demnach von dem sozialen Umfeld ab, nicht von der sozialen Lage. Es entsteht das Bild eines/einer Akteur:in, der/die nicht isoliert über sein/ihr individuelles Handeln entscheidet, sondern nach der kollektiven Identität der Bewegung funktioniert (Gherairi, 2015). Er oder Sie ist in dieser Sichtweise mehr oder weniger ausführendes Organ dessen, was das soziales Umfeld an Symbolen, Schemata und Zeichen vorschreibt (ebd.). Wie Roger Gould (1995) untersuchen auch wir das Netzwerk einer Protestbewegung. Indem wir das Gesamtnetzwerk in der Struktur untersuchen finden wir heraus, wie die Schauspieler der #allesdichtmachen-Bewegung untereinander vernetzt sind.
+
+**Arbeitshypothesen** 
+
+Zu Beginn unserer Forschung gingen wir von folgenden Hypothesen aus, die sich im Laufe unsere Netzwerkanalyse zum Teil bewahrheiteten oder auch nicht: a) Die meisten Teilnehmer:innen kommen aus Berlin. b) Die Zusammenarbeit orientiert sich primär an Homophilie, das heißt zum Beispiel, dass die Teilnehmer:innen zur gleichen Zeit in einer Serie, einem Film oder einem Theaterstück zusammen spielten.  c) Dietrich Brüggemann hat als Initiator von #allesdichtmachen die meisten Verbindungen zu anderen Teilnehmer:innen. d) Unter der Serie „Tatort“ fallen die meisten Berührungspunkte miteinander. e) Es entsteht ein großes und unübersichtliches Netzwerk. f) Darunter können wir aber vereinzelte Cliquen feststellen. d) Umso mehr wir das Netzwerk in dessen Strukturen untersuchen, umso mehr Ergebnisse während unserer Analyse können wir erzielen.
+
+**Datenerhebung**
+ 
+Für unsere Forschung war es essentiell wichtig, dass wir uns auf eine einheitliche Art der Datenerhebung geeinigt haben. Somit wusste jedes Mitglied der Forschungsgruppe zu Beginn den genauen Ablauf und wir haben früh angefangen über mögliche Probleme zu sprechen. Zunächst wurde jedem Gruppenmitglied eine gewisse Anzahl Akteur:innen zugeordnet und zu diesen hat jeder individuell bis zu unserer Deadline die vorab abgesprochenen Daten erhoben.
+ 
+Zu jedem Akteur der Aktion #allesdichtmachen recherchierten wir den aktuellen Wohnort und die Agentur beziehungsweise das Management der Akteur:innen. Ein weiterer wichtiger und aufwendiger Schritt war es die gesamte Filmografie und alle Theaterproduktionen, an denen die/der Akteur:in seit 2000 mitgewirkt hat, genau zu erarbeiten. Dabei war eine Schwierigkeit, dass bei einigen Akteur:innen nicht immer die gesamte Filmografie zu finden war, sondern nur eine Auswahl, somit mussten wir explizit darauf achten, dass alle Projekte berücksichtigt wurden. Zusätzlich wurde jede:r Akteur:in auf sonstige Verbindungen zu den jeweils anderen 51 überprüft. Damit wir hier keine Verbindung übersehen, hat jedes Mitglied die eigenen Akteure, durch eine Google-Suche, gemeinsam mit jeweils einem Namen der übrigen Akteure, überprüft.
+ 
+Im nächsten Schritt wurden alle gesammelten Daten zusammen in eine einheitliche Liste übertragen. Dabei haben wir auch nochmal die Schreibweise von Folgen einer Serie besprochen, damit wir Dubletten und somit Verbindungen finden können und keine übersehen wird. Außerdem war es dabei wichtig den Zeitpunkt der Produktion oder den Zeitraum und Ort der Theateraufführungen zu beachten, da gerade bei den Theaterstücken viele dabei waren, die zwar in einem gleichnamigen Stück gespielt haben, aber zu verschiedenen Zeitpunkten oder an unterschiedlichen Orten. Beim ersten Blick auf die Liste konnten wir somit schon die ersten Einschätzungen zu Gemeinsamkeiten treffen. Jedoch musste jede Verbindung überprüft werden und dies haben wir durch die Suche nach Dubletten in unserer Liste erreicht. Die doppelt genannten Produktionen zeigten uns somit die Verbindungen und wir mussten diese dann schriftlich festhalten. Derselbe Ablauf wurde auch bei Verbindungen durch Wohnorte, Agenturen oder sonstige Projekte angewandt.
+ 
+Aus diesen Erhobenen Daten konnten wir unsere Edgelist erstellen, in der nun alle Verbindungen der Akteur:innen durch Produktionen der letzten 21 Jahre, Agenturen, Wohnorte und anderen Projekten festgehalten sind. Bei der Erstellung der Nodelist sind wir jedoch auf das Problem gestoßen, dass viele Produktionen, Namen der Akteur:innen, Agenturen, Theaterstücke oder sonstige Projekte Sonderzeichen enthielten, die wir bereinigen mussten. Während dieser Bereinigung achteten wir außerdem auch darauf keine Leerzeichen in der Edgelist zu übersehen.
+
+```{r Hauptnetzwerk, fig.hight=30, fig.width=50}
+# Zusammenführen von Edge- und Nodelist als igraph-Objekt
+v <- graph_from_data_frame(d=edgematrix, vertices=nodes, directed=FALSE)
+
+
+#V Visualisierung des Netzwerks
+V(v)[V(v)$type == 1]$color <- "red" # Die Akteure werden rot angezeigt 
+V(v)[V(v)$type == 2]$color <- "lightblue" # Filme/Serien/Theaterstücke werden hellblau angezeigt
+V(v)[V(v)$type == 3]$color <- "pink" # Agenturen werden rosa angezeigt
+V(v)[V(v)$type == 4]$color <- "lightgreen" # Projekte und sonstige Akteure werden hellgrün angezeigt
+V(v)[V(v)$type == 1]$shape <- "circle" # Die Akteure werden als Kreis angezeigt
+V(v)[V(v)$type == 2]$shape <- "square" # Filme/Serien/Theaterstücke werden als Viereck angezeigt
+V(v)[V(v)$type == 3]$shape <- "square" # Agenture werden als Viereck angezeigt
+V(v)[V(v)$type == 4]$shape <- "square" # Projekte und sonstige Akteure werden als Viereck angezeigt
+V(v)$frame.color <-  "gray" # die Rahmenfarbe ist grau
+E(v)$color <- "grey60" # Die Kanten werden grau angezeigt
+
+plot(v, 
+     layout=layout_nicely,
+     vertex.label.color = "black",
+     asp = 0,
+     vertex.size=3,
+     edge.color = "gray",
+     edge.curved=.1,
+     main="#allesdichtmachen")
+# hier wird das Netzwerk visualisiert
+
+```
+```{r Gesamtnetzwerk ohne Isolates, fig.hight=30, fig.width=50}
+v1 <- delete.vertices(v, c("Claudia Rippe")) # hier wird die isolierte Akteurin Claudia Rippe entfernt
+
+plot(v1,
+     layout=layout_nicely,
+     vertex.label.color = "black",
+     asp = 0,
+     vertex.size=3,
+     edge.color = "gray",
+     edge.curved=.1,
+     main="#allesdichtmachen")
+```
+**Gesamtnetzwerk**
+ 
+Das Gesamtnetzwerk veranschaulicht worüber die Akteur:innen der Aktion #allesdichtmachen vernetzt sind. Dabei handelt es sich um ein ungerichtetes und ungewichtetes Two-mode-Netzwerk.
+ 
+Um eine ganzheitliche Analyse vorzunehmen, haben wir zusätzlich ein gerichtetes Gesamtnetzwerk erstellt. 
+ 
+Neben den Akteur:innen der Aktionen #allesdichtmachen, werden gemeinsame Film-, Serien- und Theaterprojekte, sowie die gemeinsamen Agenturen der Akteur:innen als Nodes dargestellt. Das Gesamtnetzwerk umfasst 52 Akteur:innen, 183 Film-, Serien- und Theaterprojekte, sieben Agenturen und drei sonstige Projekte. Bei der Betrachtung des Netzwerkes fällt ein Knoten auf, Claudia Rippe, die von den anderen isoliert ist. Diese Akteurin verfügt, abgesehen von der #allesdichtmachen-Kampagne über keine weiteren Verbindungen zu den anderen Knoten und wird im Laufe der Netzwerkanalyse nicht mehr berücksichtigt, da sie keinerlei Erkenntnisse für die weitere Analyse liefern kann. Deshalb haben wir uns dazu entschieden ein bereinigtes Gesamtnetzwerk (v1) ohne den Isolate Claudia Rippe zu erstellen, mit dem wir im Weiteren die Analysen durchführen. 
+ 
+Von insgesamt 584 Edges handelt es sich bei 532 um Verbindungen zu gemeinsamen Film- und Serienprojekte. 25 Edges stehen für eine gemeinsame Agentur und nur acht Verbindungen sind privater Natur. Zwei Verbindungen stellen ein, für die Kampagne gemeinsam produziertes Video dar. Sonstige Verbindungen gibt es 17. Die Akteur:innen sind also vorwiegend beruflich miteinander verbunden. 
+
+```{r Komponentenanalyse Gesamtnetzwerk, include=FALSE}
+is.connected(v1) # besteht das Netzwerk aus Komponenten? 
+components(v1) # wenn ja, wie vielen? 
+edge_density(v1, loops=FALSE) # Dichte des Netzwerks 
+diameter(v1) # Umfang des Netzwerks
+farthest_vertices(v1) # Pfaddistanzen (Distance)
+```
+Die Dichte beschreibt wie eng das Netzwerk verbunden ist. Die Dichte des Gesamtnetzwerks beträgt 1,3 Prozent von allen möglichen Verbindungen. Die Pfaddistanz berechnet die Anzahl der Verbindungen, über die ein:e Akteur:in eine:n zweite:n Akteur:in im Durchschnitt erreichen kann. Die durchschnittliche Pfaddistanz beträgt gerundet 3,9 Schritte. Die Knoten mit den längsten Pfaden sind Volker Bruch, Jerks, Cem Ali Gueltekin, Rote Rosen, Gianna Valentina Bauer, Samia Dauenhauer, Mandy: Das Sozialdrama Nadine Dubois, agentur factory, Miriam Stein. Der Durchmesser zählt die maximale Distanz zwischen Knoten in einem Netzwerk. In unserem Gesamtnetzwerk beträgt der Durchmesser neun Schritte.
+
+```{r Hauptnetzwerk gerichtet mit und ohne Isolates, fig.hight=30, fig.width=50}
+# Zusammenführen von Edge- und Nodelist als igraph-Objekt
+v2 <- graph_from_data_frame(d=edgematrix, vertices=nodes, directed=TRUE)
+
+
+#V Visualisierung des Netzwerks
+V(v2)[V(v2)$type == 1]$color <- "red" # Die Akteure werden rot angezeigt 
+V(v2)[V(v2)$type == 2]$color <- "lightblue" # Filme/Serien/Theaterstücke werden hellblau angezeigt
+V(v2)[V(v2)$type == 3]$color <- "pink" # Agenture werden rosa angezeigt
+V(v2)[V(v2)$type == 4]$color <- "lightgreen" # Projekte und sonstige Akteure werden hellgrün angezeigt
+V(v2)[V(v2)$type == 1]$shape <- "circle" # Die Akteure werden als Kreis angezeigt
+V(v2)[V(v2)$type == 2]$shape <- "square" # Filme/Serien/Theaterstücke werden als Viereck angezeigt
+V(v2)[V(v2)$type == 3]$shape <- "square" # Agenture werden als Viereck angezeigt
+V(v2)[V(v2)$type == 4]$shape <- "square" # Projekte und sonstige Akteure werden als Viereck angezeigt
+V(v2)$frame.color <-  "gray" # die Rahmenfarbe ist grau
+E(v2)$color <- "grey60" # Die Kanten werden grau angezeigt
+
+plot(v2, 
+     layout=layout_with_kk,
+     vertex.label.color = "black",
+     asp = 0,
+     edge.color = "black",
+     main="#allesdichtmachen",
+     vertex.size= 3)
+# Visualisierung des gerichteten Netzwerks
+
+v2_2 <- delete.vertices(v2, c("Claudia Rippe")) # Isolate des Netzwerks wird gelöscht
+
+plot(v2_2,
+     layout=layout_with_kk,
+     vertex.label.color = "black",
+     asp = 0,
+     edge.color = "black",
+     main="#allesdichtmachen",
+     vertex.size= 3)
+# hier wird das Netzwerk visualisiert
+
+```
+**Zentralitätsmaße**
+ 
+Es gibt verschiedene Zentralitätsmaße, um die „Wichtigkeit“ oder die Zentralität verschiedener Knoten innerhalb des Netzwerkes zu bewerten. 
+ 
+**Degree**
+Der Degree-Wert liefert Auskunft über die Anzahl der Kanten eines Knotens im Netzwerk. Mit dem Degree-Wert kann man den Knoten mit den meisten Verbindungen anzeigen lassen:
+
+```{r Zentralitätsmaß Degree, include=FALSE}
+# Höchster Degree
+dv <- degree(v1)
+dv
+# Hier werden alle Degree-Werte angezeigt
+
+which.max(dv)
+# Hier wird der höchste Degree-Wert aus den vorrigen ausgewählt und angezeigt.
+# Martin Brambach hat mit 49 Verbindungen den höchsten Degree-Wert
+```
+In unserem Netzwerk hat Martin Brambach mit 49 Verbindungen den höchsten Degree-Wert.
+ 
+**Betweenness** 
+Der Betweenness-Wert gibt an, wie wichtig einzelne Knoten für die Vernetzung zu anderen Knoten sind. Die sogenannten Brücken oder Broker können einzelne Netzwerke miteinander verbinden. 
+```{r Zentralitätsmaß Betweenness, include=FALSE}
+# Höchster Betweenness-Wert
+bv <- betweenness(v1)
+bv
+# Hier werden alle Betweennesswerte angezeigt
+
+which.max(bv)
+# der höchste Betweenness-Wert wird bestimmt 
+# in diesem Fall ist es Martin Brambach mit einem Betweenness-Wert von 9390.28900
+```
+Den höchsten Betweenness Wert hat ebenfalls Martin Brambach mit 9390.28900.
+ 
+**Erklärungsmuster Homophilie**
+ 
+Erklärungsmuster werden genutzt, um die Struktur von Netzwerken zu beschreiben. Dazu gehört auch die Homophilie. Sie betont die Strukturähnlichkeit von Knoten. Mithilfe der Homophilie können wir also herausfinden, welche Knoten sich besonders ähnlich sind.
+ 
+```{r Zentralitätsmaß Homophilie, echo=TRUE}
+# Homophilie
+assortativity_nominal(v1, V(v1)$sex, directed=T) # Das Netzwerk wird auf strukturelle Ähnlichkeiten der Knoten durch das Node-Attribute sex durchsucht
+
+assortativity_nominal(v1, V(v1)$type, directed=T) # Das Netzwerk wird auf strukturelle Ähnlichkeiten der Knoten durch das Node-Attribute type durchsucht
+
+assortativity_nominal(v1, V(v1)$job, directed=F) # Das Netzwerk wird auf strukturelle Ähnlichkeiten der Knoten durch das Node-Attribute job durchsucht
+
+assortativity_degree(v1, directed=F) # Durchsucht die Nodeverbindungen nach strukturellen Ähnlichkeiten
+```
+**Sonstige Zentralitätsmaße**
+ 
+Die Zentralitätsmaße Reziprozität und Closeness lassen wir in unserer Forschung außen vor, da sie in unserem Netzwerk keine Ergebnisse liefern.
+
+
+**Analyse der Teilnetzwerke**
+
+Die Analyse der Teilnetzwerke ist abhängig von der Forschungsfrage. So beziehen wir uns bei den Teilnetzwerken stets auf den Hintergrund möglicher Verbindungen zwischen den Akteur:innen von #allesdichtmachen. Bestenfalls liefert uns die Analyse mögliche Gründe für die Zusammensetzung des Teilnehmer-Kreises.
+Dazu haben wir verschiedene Teilnetzwerke aus dem Edge-Attribut „relationship“ und diversen Node-Attributen analysiert. Daraus haben wir weitere Erkenntnisse gewonnen und Ego-Netzwerke, sowie ein gesondertes Tatort-Netzwerk erstellt.
+
+Auch in der Analyse der Teilnetzwerke wurde der Isolate „Claudia Rippe“ nicht mitberücksichtigt. Die Teilnetzwerke wurden aus dem bereinigten Gesamtnetzwerk v1 erstellt.
+
+
+**Teilnetzwerke nach Beziehungsart (Edge-Attributen)**
+
+Das Gesamtnetzwerk der #allesdichtmachen-Aktion besteht aus insgesamt fünf Beziehungsarten, die unter dem Edge-Attribut relationship definiert sind. Dazu gehören die Zusammenarbeit in Filmen, Serien und Theaterstücken, die Verbindung über gemeinsame Agenturen (zukünftig Teilnetzwerk „agency“), private Verbindungen, wie Freundschaften und Verwandtschaftsbeziehungen, gemeinsame Videos zur Kampagne und die Verbindung über sonstige Projekte (zukünftig Teilnetzwerk „project“). Die privaten Verbindungen und die gemeinsame Zusammenarbeit in einem Videobeitrag sind dabei reziprok.
+
+Generelle Teilnetzwerke, die wir betrachtet haben:
+
+-agency (gesamt)
+-project (gesamt)
+
+```{r Agentur-Netzwerk}
+agency <- subgraph.edges(v1, E(v1)[relationship==2]) 
+agency
+# Um ein Netzwerk zu erstellen in dem die Schauspieler*innen ihren Agenturen zugeordnet werden, wurden die die Beziehungstypen zu Agenturen herausgefiltert
+
+# Visualisierung des Teilnetzwerks der Agenturen und den mit ihnen verbundenen Akteur*innen
+plot(agency,
+     asp=0,
+     vertex.label.color="black",
+		 main="Netzwerk Agenturen")
+
+```
+**Agenturen-Netzwerk**
+
+Neben den allgemeinen Verbindungen zwischen den Akteur:innen über die Zusammenarbeit in Filmen, Serien und Agenturen interessiert uns auch die anderweitigen Verbindungen. So auch die Verbindung über gemeinsame Agenturen. Daher haben wir uns das Agentur-Netzwerk „agency“ genauer angeschaut. Dazu wurde über den Befehl subgraph.edges() die Beziehungsart (relationship) 2 der Verbindung über gemeinsame Agenturen herausgefiltert. Es entsteht also ein Netzwerk aus allen Agenturen in unserer Nodelist mit den Edges zu den zugehörigen Akteur:innen.
+
+Insgesamt enthält das Netzwerk 29 Nodes, bestehend aus sieben Agenturen und 22 Schauspieler:innen und Regisseur:innen. Die über 25 Edges miteinander verbunden sind. Auffällig dabei sind die vielen Edges ausgehend von der Players Agentur Management GmbH. Daher haben wir uns im Folgenden noch das Ego-Netzwerk dieser Agentur analysiert. Ebenfalls interessant ist die Verbindung der Players Agentur Management GmbH mit der Agentur Publics PR & Management über den Node Wotan Wilke Möhring. Er ist bei beiden Agenturen unter Vertrag. Weitere größere Teilnetzwerke und mögliche Verbindungs-Netzwerke über das Agentur-Netzwerk gibt es nicht. Die übrigen fünf Agenturen verbinden zwischen zwei und drei Akteur:innen und sind untereinander nicht verbunden.
+
+
+```{r Netzwerk mit Projekten}
+project <- subgraph.edges(v1, E(v1)[relationship==5]) 
+project
+# Um ein Netzwerk zu erstellen in dem die weiteren Projekte mit ihren Teilnehmern dargestellt werden, wurden die Beziehungstypen zu anderen Projekten herausgefiltert
+
+
+plot(project,
+     layout = layout_nicely,
+     asp=0,
+     vertex.label.color="black",
+		 main="Netzwerk Andere Projekte")
+# Visualisierung des Netzwerks
+```
+**Projekte-Netzwerk**
+
+Besonders interessant sind auch mögliche Verbindungen der Akteur:innen über sonstige Projekte. Hier haben wir bei der Datenerhebung drei Projekte gefunden, über die Teile der Mitgestalter:innen von #allesdichtmachen verbunden sind. Dies ist zum einen die Comedy Tour, eine Tour mit bekannten Comedians in Deutschland, die von Stadt zu Stadt zieht. Sie wurde 2007 von Cem Ali Gültekin, einem der Akteur:innen der #allesdichtmachen-Kampagne ins Leben gerufen (Gültekin, 2021). Die beiden anderen Projekte sind die beiden sozialen Projekte „Changemakers“ und „Los für Lesbos“. Letzteres ist eine Künstler:innen-Spenden-Aktion zur Seenotrettung, die vom Schauspieler Volker Bruch initiiert wurde. Dieser ist ebenfalls Teil der #allesdichtmachen-Kampagne (Marquardt, o.J.). Changemakers ist ein Projekt, das die Filmbranche umweltfreundlicher machen soll. Es handelt sich um eine freiwillige Selbstverpflichtung und Erklärung von Filmschaffenden zum „Grünen Drehen“ (Mirza, (o.J.).
+
+Das Projekt-Netzwerk „projects“ umfasst insgesamt 17 Nodes und 17 Edges. Abzüglich der drei Projekte und der drei Teilnehmer:innen an der Comedy Tour, lassen sich als 11 Akteur:innen identifizieren, die sich sozial über die Projekte „Changemakers“ und „Los für Lesbos“ engagieren. Interessant zu sehen ist hierbei, dass sich die drei Teilnehmer:innen an dem Projekt „Los für Lesbos“ auch an dem Projekt „Changemakers“ beteiligen. Die beiden sozialen Projekte mit ihren Mitglieder:innen bilden gemeinsam ein „soziales“ Netzwerk.
+
+
+**Teilnetzwerke nach Node-Attributen**
+
+Bei der Analyse der Teilnetzwerke nach Node-Attributen haben wir uns auf die Analyse der Attribute „sex“, „video“ und „home“ beschränkt. Aus diesen Teilnetzwerken erhoffen wir uns die meisten Erkenntnisse bezogen auf unsere Forschungsfrage. Aus dem Attribut „type“ haben wir vorab ein Personen-Netzwerk (zukünftig Teilnetzwerk „p“) zur besseren Übersichtlichkeit erstellt. Die Attribute „films“ und „range“ bringen einen interessanten Überblick, zahlen jedoch nicht auf die Frage nach möglichen Verbindungspunkten der Akteur:innen ein. Sie werden im späteren Verlauf im Gesamtnetzwerk visualisiert.
+
+Generelle Teilnetzwerke, die wir betrachtet haben:
+
+-p (gesamt)
+-männer (gesamt)
+-frauen (gesamt)
+-video_on (p)
+-video_off (p)
+-berlin (p)
+-hamburg (p)
+-wien (p)
+-muenchen (p)
+-stuttgart (p)
+-potsdam (p)
+-recklinghausen (p)
+-luxemburg (p)
+-koeln (p)
+
+```{r Teilnetzwerk Personen mit und ohne isolate}
+
+personen <- delete_vertices(v,V(v)[type !="1"]) # Um ein Netzwerk mit nur den Akteur*innen, ohne Filme, Serien, Agenturen und Projekte zu erstellen wurde nach dem Node-Attribute type gefiltert. 
+personen # Teilnetzwerk Personen mit Isolate aus dem Gesamtnetzwerk - nur Personen werden angezeigt
+
+p <- delete_vertices(v1,V(v1)[type !="1"]) # Um ein Netzwerk mit nur den Akteur*innen, ohne Filme, Serien, Agenturen und Projekte zu erstellen wurde nach dem Node-Attribute type gefiltert.
+p #Teilnetzwerk Personen ohne Isolate aus dem bereinigten Gesamtnetzwerk - nur Personen werden angezeigt
+
+```
+**Personennetzwerk (type)**
+
+Im Folgenden wollen wir weitere Teilnetzwerke nach Node-Attributen vergleichen. Hierbei geht jedoch nicht um die Verbindungen zwischen den Akteur:innen über gemeinsame Filme, Serien, Projekte oder Agenturen. Es geht darum potenzielle Verbindungen der Akteur:innen durch gleiche Eigenschaften und daraus resultierende Gemeinsamkeiten herauszufiltern.
+
+Das Personen-Netzwerk wurde über das Node-Attribut „type“ erstellt. Es umfasst 52 Nodes mit dem isolierten Node „Claudia Rippe“ und 51 Nodes ohne Isolate. Beide Varianten umfassen zehn Edges. Diese Edges haben den relationship-Wert 3, es handelt sich also um private Verbindungen. Insgesamt gibt es vier private Verbindungen und eine Verbindung über ein gemeinsam gedrehtes Video, die jeweils reziprok sind.
+In der weiteren Analyse haben wir uns nur noch auf das Personen-Netzwerk „p“ ohne Claudia Rippe als Isolate, bezogen.
+
+
+```{r Männer und Frauen, fig.hight=30, fig.width=50}
+par(mfrow=c(1,2), mar=c(2,0,2,0)) # Nebeneinanderdarstellung der Netzwerke
+
+männer<- delete_vertices(v1, V(v1)[sex!= 1]) 
+männer # Herausfiltern der Männer nach dem Node-Attribut sex 
+plot(männer,
+     vertex.label.cex=2,
+     vertex.label.color= "black",
+     vertex.color="blue",
+     main="Männer") # Visualisierung
+
+frauen<- delete_vertices(v1, V(v1)[sex!= 2]) 
+frauen # Herausfiltern der Frauen nach dem Node-Attribut sex
+plot(frauen,
+     vertex.label.cex=2,
+     vertex.label.color= "black",
+     vertex.color="red",
+     main="Frauen")# Visualisierung
+
+```
+**Teilnetzwerk nach Geschlecht (sex)**
+
+Die 51 Akteur:innen der Kampagne teilen sich ziemlich gleichmäßig in Männer und Frauen auf. Insgesamt zeigt die vergleichende Darstellung der Geschlechter-Netzwerke 29 Männer und 22 Frauen. Als einzige Verbindung zwischen den Personen bleibt die Vater-Sohn-Beziehung zwischen Jörg Bundschuh und Joseph Konrad Bundschuh im Männer-Netzwerk stehen.
+
+Die beiden Geschlechter-Netzwerke wurden über das Node-Attribut „sex“ gefiltert.
+
+**Vidualisierung nach Geschlecht**
+
+Die Geschlechterverteilung des Gesamtnetzwerkes lässt sich besonders gut darstellen, indem alle weiblichen Akteurinnen rot und alle männlichen Akteure in blau dargestellt werden. Alle restliche Knoten, die keine Menschen sind, werden einheitlich in schwarz dargestellt.
+
+```{r Teilnetzwerke nach video | Ist der Beitrag zu #allesdichtmachen des Akteurs noch offline oder wurde er zurückgezogen}
+
+par(mfrow=c(2,1), mar=c(2,0,2,0)) #Vergleichende Darstellung der Video-Netzwerke in 2 Reihen à 1 Netzwerk, sprich untereinander. 
+
+video_on<- delete_vertices(p, V(p)[video!= 1]) # Um ein Netzwerk mit allen Personen zu erstellen, deren Video zur #allesdichtmachen-Kampagne noch auf YouTube verfügbar ist, wurde aus dem Personennetzwerk nach dem Node-Attribut video gefiltert. 
+video_on 
+# Erstellung des Netzwerks mit Schauspieler*innen deren Video noch online ist
+
+video_off <- delete_vertices(p,V(p)[video!=2]) # Um ein Netzwerk mit allen Personen zu erstellen, die ihr Video zur #allesdichtmachen-Kampagne zurück gezogen und offline genommen haben, wurde aus dem Personennetzwerk nach dem Node-Attribut video gefiltert. 
+video_on 
+video_off
+# Erstellung des Netzwerks mit Schauspieler*innen deren Video wieder offline ist
+
+plot(video_on,
+     asp=0,
+     edge.arrow.size=.2,
+     layout=layout_with_kk,
+     vertex.size=8,
+     vertex.frame.color="white",
+     vertex.color= "green",
+     edge.color="blue",
+     edge.curved=.2,
+     edge.curved=curve_multiple(video_on),
+     main="Video online")
+# Visualisierung des Netzwerks mit Schauspieler*innen deren Video noch online ist 
+# Die Nodes werden in grün angezeigt - Analogie online. 
+
+plot(video_off,
+     asp=0,
+     edge.arrow.size=.2,
+     layout=layout_with_kk,
+     vertex.size=8,
+     vertex.frame.color="white",
+     edge.color="blue",
+     edge.curved=.2,
+     vertex.color= "red",
+     edge.curved=curve_multiple(video_off),
+     main="Video Offline",
+     sub="n=14")
+# Visualisierung des Netzwerks mit Schauspieler*innen deren Video wieder offline ist
+# Die Nodes werden in rot angezeigt - Analogie offline. 
+```
+**Teilnetzwerke nach Verfügbarkeit der Videobeiträge zu #allesdichtmachen (video)**
+
+Besonders spannend in der umstrittenen Kampagne ist auch die Verfügbarkeit der ursprünglichen Videos. Nach Kritik an der Kampagne haben viele Akteur:innen ihre Videos zurückgenommen und offline gestellt. Insgesamt waren es 53 Videos der 52 Akteur:innen – Christine Sommer und Martin Brambach haben zusätzlich zu ihren Einzelbeiträgen auch ein gemeinsames Video gedreht (Zeruyu, 2021). Da wir uns in unsere Analyse aber auf das bereinigte Gesamtnetzwerk ohne Claudie Rippe beziehen, ist unsere Grundgesamtheit 52 Videos.
+
+Bei der Datenerhebung haben wir die Verfügbarkeiten der Videos über das Node-Attribut „video“ erhoben. Daher erstellen wir auch vergleichend die beiden Teilnetzwerke „video_on“ und „video_off“ über das Node-Attribut „video“. Es zeigt sich, dass über die Hälfte der Akteur:innen, nämlich 26, ihr Video bereits wieder zurückgezogen haben. 25 Videos sind noch online. Ebenfalls offline ist das gemeinsame Video von Christine Sommer und Martin Brambach, das jedoch nicht in der Visualisierung des Teilnetzwerkes erkennbar ist. Auch interessant ist, dass die Akteur:innen, die über private Freundschaft- oder Verwandtschaftsbeziehungen verbunden sind, ihre Videos entweder noch einheitlich online oder einheitlich offline haben. Ersteres bezieht sich auf Miriam Stein und Volker Bruch (Lebenspartnerschaft), zweiteres auf Trystan Pütter und Heike Makatsch (Lebenspartnerschaft), sowie Jörg Bundschuh und Joseph Konrad Bundschuh (Vater-Sohn-Beziehung). Einzige Ausnahme ist hier das Ehepaar Brambach (off) und Sommer (on). Diese Erkenntnisse lassen sich aus den Edges der Video-Netzwerke ableiten.
+
+Die Verfügbarkeit der Videos wurde während der Datenerhebung zum Zeitpunkt des 13. Septembers 2021 erhoben. Es kann sein, dass dies mittlerweile nicht mehr der Realität entspricht.
+
+**Teilnetzwerke nach Heimatstädten (home)**
+
+Um herauszufinden, inwiefern verschiedenen Akteur:innen in derselben Stadt wohnen und darüber verbunden sind, haben wir die neun Teilnetzwerke des Node-Attributs „home“ verglichen. Hierbei haben wir die Teilnetzwerke bewusst nicht aus dem Gesamtnetzwerk, sondern aus dem Personen-Netzwerk erstellt. Wichtig war nicht die Verbindungen über andere Nodes, sondern die Gemeinsamkeit des Wohnorts.
+
+Es fällt auf, dass circa 62,7 Prozent, sprich 32 Akteur:innen von #allesdichtmachen in der Hauptstadt Berlin leben. Daher haben im Folgenden das Berlin-Netzwerk noch einmal separat betrachtet, um spezielle Akteur:innen zu identifizieren. Nach Berlin befindet sich, gemessen an der Zahl der Nodes im Netzwerk, Hamburg auf Platz zwei. Hier leben jedoch nur vier Akteur:innen. In den übrigen sieben Netzwerken befinden sich zwischen einem und drei Nodes. Ebenfalls anzumerken ist die fehlende private Edge-Verbindung des Ehepaars Martin Brambach und Christine Sommer. Die beiden Personen haben ihren Hauptwohnsitz nicht in derselben Stadt.
+Nicht in den Netzwerken enthalten sind Jens Wawrczeck, Jeana Paraschiva, Richy Müller und Roland Düringer. Bei diesen Personen konnten wir trotz Recherche keine genauen Wohnorte herausfinden.
+
+
+```{r Teilnetzwerke nach Heimatstädten nur Personen}
+
+par(mfrow=c(3,3), mar=c(2,0,2,0)) #Vergleichende Darstellung der Heimatstadt-Netzwerke in 3 Reihen à 3 Netzwerke
+
+list.vertex.attributes(p)
+vertex_attr(p)$home
+
+berlin <- delete_vertices(p, V(p) [home !="1"]) #löscht alle Nodes im Personennetzwerk, die nicht den Wert 1=Berlin bei dem Node-Attribut "home" haben
+berlin
+plot(berlin, layout=layout_with_kk,
+     main="Heimatstadt Berlin") 
+#Teilnetzwerk Heimatstadt Berlin mit allen Akteur*innen, die ihren Erstwohnsitz in Berlin haben.
+
+hamburg <- delete_vertices(p, V(p) [home !="2"]) #löscht alle Nodes im Personennetzwerk, die nicht den Wert 2=Hamburg bei dem Node-Attribut "home" haben
+hamburg
+plot(hamburg, layout=layout_with_kk,
+     main="Heimatstadt Hamburg")
+#Teilnetzwerk Heimatstadt Hamburg mit allen Akteur*innen, die ihren Erstwohnsitz in Hamburg haben.
+
+wien <- delete_vertices(p, V(p) [home !="3"]) #löscht alle Nodes im Personennetzwerk, die nicht den Wert 3=Wien bei dem Node-Attribut "home" haben
+wien
+plot(wien, layout=layout_with_kk,
+     main="Heimatstadt Wien")
+#Teilnetzwerk Heimatstadt Wien mit allen Akteur*innen, die ihren Erstwohnsitz in Wien haben.
+
+muenchen <- delete_vertices(p, V(p) [home !="4"]) #löscht alle Nodes im Personennetzwerk, die nicht den Wert 4=München bei dem Node-Attribut "home" haben
+muenchen
+plot(muenchen, layout=layout_with_kk,
+     main="Heimatstadt München")
+#Teilnetzwerk Heimatstadt München mit allen Akteur*innen, die ihren Erstwohnsitz in München haben.
+
+stuttgart <- delete_vertices(p, V(p) [home !="5"]) #löscht alle Nodes im Personennetzwerk, die nicht den Wert 5=Stuttgart bei dem Node-Attribut "home" haben
+stuttgart
+plot(stuttgart, layout=layout_with_kk,
+     main="Heimatstadt Stuttgart")
+#Teilnetzwerk Heimatstadt Stuttgart mit allen Akteur*innen, die ihren Erstwohnsitz in Stuttgart haben.
+
+potsdam <- delete_vertices(p, V(p) [home !="6"]) #löscht alle Nodes im Personennetzwerk, die nicht den Wert 6=Potsdam bei dem Node-Attribut "home" haben
+potsdam
+plot(potsdam, layout=layout_with_kk,
+     main="Heimatstadt Potsdam")
+#Teilnetzwerk Heimatstadt Potsdam mit allen Akteur*innen, die ihren Erstwohnsitz in Potsdam haben.
+
+recklinghausen <- delete_vertices(p, V(p) [home !="7"]) #löscht alle Nodes im Personennetzwerk, die nicht den Wert 7=Rechlinghausen bei dem Node-Attribut "home" haben
+recklinghausen
+plot(recklinghausen, layout=layout_with_kk,
+     main="Heimatstadt Recklinghausen")
+#Teilnetzwerk Heimatstadt Recklinghausen mit allen Akteur*innen, die ihren Erstwohnsitz in Recklinghausen haben.
+
+luxemburg <- delete_vertices(p, V(p) [home !="8"]) #löscht alle Nodes im Personennetzwerk, die nicht den Wert 8=Luxemburg bei dem Node-Attribut "home" haben
+luxemburg
+plot(luxemburg, layout=layout_with_kk,
+     main="Heimatstadt Luxemburg")
+#Teilnetzwerk Heimatstadt Luxemburg mit allen Akteur*innen, die ihren Erstwohnsitz in Luxemburg haben.
+
+koeln <- delete_vertices(p, V(p) [home !="9"]) #löscht alle Nodes im Personennetzwerk, die nicht den Wert 9=Köln bei dem Node-Attribut "home" haben
+koeln
+plot(koeln, layout=layout_with_kk,
+     main="Heimatstadt Köln")
+#Teilnetzwerk Heimatstadt Köln mit allen Akteur*innen, die ihren Erstwohnsitz in Köln haben.
+```
+
+```{r Teilnetzwerk Berlin}
+berlin <- delete_vertices(p, V(p) [home !="1"]) #löscht alle Nodes im Personennetzwerk, die nicht den Wert 1=Berlin bei dem Node-Attribut "home" haben
+berlin
+plot(berlin, layout=layout_with_kk,
+     main="Heimatstadt Berlin") 
+#Teilnetzwerk Heimatstadt Berlin mit allen Akteur*innen, die ihren Erstwohnsitz in Berlin haben.
+```
+**Teilnetzwerk Berlin**
+
+Da fast zwei Drittel der Akteur:innen der Kampagne ihren Erstwohnsitz in Berlin haben, haben wir uns dieses Netzwerk noch einmal genau betrachtet. Es lässt sich vermuten, dass sich viele Akteur:innen der Kampagne über dieses Heimatstadtnetzwerk kennen. Auch Dietrich Brüggemann, der vermutete Initiator (Sauvageot, 2021) der Kampagne, hat hier seinen Wohnsitz. Insgesamt umfasst das Netzwerk 32 Nodes und sechs Edges. Diese Edges umfassen die reziproken privaten Verbindungen von Trystan Pütter und Heike Makatsch (Lebenspartnerschaft), Jörg Bundschuh und Joseph Konrad Bundschuh (Vater-Sohn-Beziehung) und Miriam Stein und Volker Bruch (Lebenspartnerschaft).
+
+**Visualisierung**
+
+Wir haben verschiedene Arten der Visualisierung gewählt, um verschiedene Aspekte das Gesamtnetzwerks anschaulich darzustellen.
+Generell werden die Knoten je nach Type verschieden dargestellt. Alle Personen werden als rote Kreise, alles andere als Quadrate angezeigt. Diese unterteilen sich noch einmal in verschiedene Farben. Agenturen werden in rosa, Filme, Serien und Theaterstücke in hellblau und sonstige Projekte in hellgrün dargestellt. So können die verschiedenen Beziehungen veranschaulicht werden. 
+
+**Visualisierung nach Wohnort**
+
+Um nach bestimmten Attributen zu filtern, werden alle Knoten hervorgehoben, die entsprechende Merkmale erfüllen. Um Zusammenhänge bezüglich des Wohnortes der Akteur:innen zu erlangen, werden die Knoten entsprechend des jeweiligen Wohnortes eingefärbt. Zur besseren Übersicht werden alle Knoten, bei denen es sich nicht um Menschen handelt, weiß dargestellt. Es lässt sich schnell ablesen, aus welcher Stadt besonders viele Akteur:innen der Kampagne kommen. 
+
+```{r Heimatstädte im Gesamtnetzwerk visualisiert, fig.hight=30, fig.width=50}
+# Die Akteure werden nach ihrer Heimatsstadt in Farben dargestellt
+V(v1)[V(v1)$home == 1]$color <- "red" # Berliner werden rot angezeigt 
+V(v1)[V(v1)$home == 2]$color <- "green" # Hamburger werden grün angezeigt
+V(v1)[V(v1)$home == 3]$color <- "purple" # Wiener werden lila angezeigt
+V(v1)[V(v1)$home == 4]$color <- "pink" # Münchner werden rosa angezeigt
+V(v1)[V(v1)$home == 5]$color <- "orange" # Stuttgarter werden orange angezeigt
+V(v1)[V(v1)$home == 6]$color <- "lightblue" # Potsdamer werden hellblau angezeigt
+V(v1)[V(v1)$home == 7]$color <- "yellow" # Recklingshausener werden gelb angezeigt
+V(v1)[V(v1)$home == 8]$color <- "lightgreen" # Luxemburger werden hellgrün angezeigt
+V(v1)[V(v1)$home == 9]$color <- "blue" # Kölner werden blau angezeigt
+V(v1)[V(v1)$home == 99]$color <- "black" # Personen ohne Wohnort werden schwarz angezeigt
+V(v1)[V(v1)$home == 98]$color <- "white" # Agenturen, Filme und Projekte werden weiß angezeigt
+
+plot(v1,
+     vertex.label.color="black",
+     vertex.size=5,
+     main="Woher kommen die Schauspieler?") # Visualisierung
+
+```
+
+**Visualisierung Berlin** 
+
+Da Berlin der häufigste Wohnort der Akteur:inne ist, wird in einem Gesamtnetzwerk alle Knoten mit dem Wohnort Berlin rot eingefärbt. Um die Lage dieser Knoten im Gesamtnetzwerk genau zu erkennen, werden alle andere Knoten weiß eingefärbt. 
+
+```{r Berliner Akteure im Gesamtnetzwerk visualisiert, fig.hight=30, fig.width=50}
+# Die Akteure werden in verschiedenen Farben dargestellt um bestimmte Akteure hervorzuheben
+V(v1)[V(v1)$home == 1]$color <- "red" # Berliner werden rot angezeigt 
+V(v1)[V(v1)$home == 2]$color <- "grey" 
+V(v1)[V(v1)$home == 3]$color <- "grey" 
+V(v1)[V(v1)$home == 4]$color <- "grey" 
+V(v1)[V(v1)$home == 5]$color <- "grey"
+V(v1)[V(v1)$home == 6]$color <- "grey" 
+V(v1)[V(v1)$home == 7]$color <- "grey"
+V(v1)[V(v1)$home == 8]$color <- "grey"
+V(v1)[V(v1)$home == 9]$color <- "grey" # die anderen Schauspieler*innen werden grau angezeigt
+V(v1)[V(v1)$home == 99]$color <- "black" # Schauspieler ohne Wohnort werden schwarz angezeigt
+V(v1)[V(v1)$home == 98]$color <- "white" # Agenturen, Filme und Projekte werden weiß angezeigt
+
+plot(v1,
+     vertex.size=5,
+     vertex.label=NA,
+     main="Berliner-Akteure") 
+# Visualisierung der Akteur*innen mit Erstwohnsitz in Berlin im Gesamtnetzwerk. 
+# Beschriftung der Nodes wird weggelassen
+
+```
+
+**Videoaufrufe**
+
+Die Anzahl der Videoaufrufe werden im Farbverlauf angezeigt. Somit ist schnell zu erkennen, welche der, im Rahmen der Kampagne, veröffentlichten Videos, die größte Reichweite hat. Je dunkler das Blau, desto mehr Aufrufe. Für schwarz eingefärbte Knoten konnten keine Werte erhoben werden, da die Videos dieser Akteur:innen zum Erhebungszeitraum nicht mehr online waren und somit keine Aufrufzahl ermittelt werden konnten. Erneut werden alle anderen Knoten, die keine Personen darstellen weiß eingefärbt.
+
+
+```{r Netwerk nach Videoaufrufen, fig.hight=30, fig.width=50}
+V(v1)[V(v1)$range == 2]$color <- "lightblue" 
+V(v1)[V(v1)$range == 3]$color <- "blue" 
+V(v1)[V(v1)$range == 4]$color <- "darkblue" # je dunkler das blau, desto mehr Videoaufrufe
+V(v1)[V(v1)$range == 99]$color <- "black" # was keinen Wert hat ist schwarz
+V(v1)[V(v1)$range == 98]$color <- "white" # was keine Person ist ist weiß
+
+plot(v1,
+     vertex.label.color="black",
+     vertex.size=5,
+     main="Wie viele Videoaufrufe?") # Visualisierung
+```
+Da viele Akteur:innen ihr Video nach kurzer Zeit wieder gelöscht haben, ist es interessant zu untersuchen, welche Videos noch online und welche offline sind. Dafür werden alle Schauspieler:innen rot angezeigt, deren Video offline ist. Grün steht für alle Akteur:innen, die das Video noch online haben. Zur besseren Übersicht werden auch hier alle anderen Knoten schwarz dargestellt. 
+
+```{r On/Off im Gesamtnetzwerk visulaisiert, fig.hight=30, fig.width=50}
+V(v1)$color <- ifelse(V(v1)$type == "1", "pink", "black") # Alles was Mensch ist, wird rosa angezeigt, der Rest schwarz
+V(v1)[V(v1)$video == 1]$color <- "darkgreen" # Männer werden blau angezeigt 
+V(v1)[V(v1)$video == 2]$color <- "darkred" # Frauen werden rot angezeigt
+
+plot(v1,
+     layout=layout_with_kk,
+     vertex.label.color="black",
+     vertex.size=5,
+     main="Geschlechteraufteilung") # Visualisierung
+
+```
+**Film-, Serien- und Theaterprojekte**
+
+Gleiches Prinzip gilt bei der Anzahl der gespielten Film-, Serien- und Theaterprojekte. Je mehr Projekte die Akteur:innen gespielt haben, desto dunkler wird der Knoten in rot eingefärbt. Alle nicht relevanten Knoten werden auch hier weiß eingefärbt.
+
+```{r Netzwerk nach Filmen, fig.hight=30, fig.width=50}
+V(v1)[V(v1)$films == 1]$color <- "grey" 
+V(v1)[V(v1)$films == 2]$color <- "pink" 
+V(v1)[V(v1)$films == 3]$color <- "red" 
+V(v1)[V(v1)$films == 4]$color <- "darkred" 
+V(v1)[V(v1)$films == 5]$color <- "black" # je dunkler die Farbe, desto mehr Filme hat die Person gespielt
+V(v1)[V(v1)$films == 98]$color <- "white" # was keine Person ist, wird weiß angezeigt
+
+plot(v1,
+     vertex.label.color="black",
+     vertex.size=5,
+     main="Wie viele Filme gespielt?") # Visualisierung
+```
+
+**Ego-Netzwerk Martin Brambach**
+
+Nachdem wir Martin Brambach als den Knoten mit dem höchsten Degree-Wert identifiziert haben, erschien es uns sinnvoll hierzu ein zusätzliches Ego-Netzwerk zu erstellen. Dafür haben wir zunächst ein Ego-Netzwerk ersten Grades erstellt. Hier werden die Filme dargestellt, bei denen Brambach mitgespielt hat, sowie seine Agentur und weitere Projekte, an denen er teilgenommen hat. Außerdem sticht auch die direkte Verbindung zu Christine Sommer heraus, dass die beiden nicht nur verheiratet sind, sondern auch über acht verschiedene Filme und Serien verbunden sind. Auffällig ist dabei auch, dass Brambach in sechs Tatort-Folgen mitgespielt hat, über die er mit anderen Schauspieler:innen der Aktion in Verbindung getreten ist.
+
+Um auch die Verbindungen zu sehen, die über die Filme entstehen in denen Martin Brambach mitspielt, haben wir nun auch ein Ego-Netzwerk zweiten Grades erstellt. Hierbei werden auch direkte Beziehungen zwischen den weiteren Teilnehmenden der #allesdichtmachen-Aktion deutlich. Besonders Babylon Berlin sticht hier als Schlüssel-Node hervor und ist die Verbindung zwischen einigen der Schauspieler:innen, fünf weitere Personen werden darüber in diesem Netzwerk dargestellt. Auch Personen mit mehreren Verbindungen zu Brambach sind hier sehr gut zu erkennen, dazu gehören Thorsten Merten, Wotan Wilke Möhring, Volker Bruch, Heike Makatsch, Nicholas Ofczarek, Felix Klare, Ken Duken, Manuel Rubey und Ulrich Tukur. Besonders die Schauspieler:innen, die über mehr als drei Filme, Serien, Projekte und Agenturen mit Brambach verbunden sind, treten hier sehr stark hervor, das trifft auf Thorsten Merten und Wotan Wilke Möhring zu.
+
+```{r Ego-Netzwerke Martin Brambach ersten und zweiten Grades, fig.hight=30, fig.width=50}
+# Ego-Netzwerk mit höchsten Degree-Wert
+ego_g <- make_ego_graph(v1, order = 1, nodes = V(v1)$name == "Martin Brambach", mode ="all")
+ego_net <- ego_g[[1]]
+ego_net
+# das Ego-Netzwerk des ersten Grades aus dem höchsten Degree-Wert (in diesem Fall Martin Brambach) wird erstellt
+
+V(ego_net)[V(ego_net)$name == "Martin Brambach"]$frame.color <- "red" 
+# Der Knoten von Martin Brambach wird nun rot umrandet
+
+plot(ego_net,
+     layout=layout_with_kk,
+     main="Ego-Netzwerk von Martin Brambach",
+     sub="ersten Grades",
+     vertex.color="lightblue",
+     vertex.label.color="black",
+     vertex.label.cex=2,
+     vertex.size=3,
+     cex.main=50)
+# Visualisierung des Egonetzwerkes von Martin Brambach
+
+# Ego-Netzwerk mit höchsten Degree-Wert
+ego_g_2 <- make_ego_graph(v1, order = 2, nodes = V(v1)$name == "Martin Brambach", mode ="all")
+ego_net_2 <- ego_g_2[[1]]
+ego_net_2
+# das Ego-Netzwerk des zweiten Grades aus dem höchsten Degree-Wert (in diesem Fall Martin Brambach) wird erstellt
+
+V(ego_net_2)[V(ego_net_2)$name == "Martin Brambach"]$frame.color <- "red" 
+# Der Knoten von Martin Brambach wird nun rot umrandet
+
+plot(ego_net_2,
+     layout=layout_with_kk,
+     main="Ego-Netzwerk von Martin Brambach",
+     sub="zweiten Grades",
+     vertex.color="lightblue",
+     vertex.label.color="black",
+     vertex.label.cex=2,
+     vertex.size=3,
+     cex.main=50)
+# Visualisierung des Egonetzwerkes zweiten Grades von Martin Brambach
+```
+
+**Ego-Netzwerk Players Agentur**
+
+Da die Players Agentur Management GmbH die meisten Verbindungen hat, im Vergleich zu allen anderen verwendeten Agenturen, haben wir uns dazu entschieden hier ebenfalls ein Egonetzwerk zu erstellen. Im Ego-Netzwerk ersten Grades, werden hier lediglich die Akteur:innen genannt, die eine direkte Verbindung zur Agentur haben. Edges zwischen den Schauspieler:innen über Filme/Serien/Theater oder andere Projekte bestehen keine.
+
+```{r Ego-Netzwerke Agentur Players ersten Grades}
+# Ego-Netzwerk der Agentur mit den meisten Verbindungen ersten Grades
+ego_agency <- make_ego_graph(v1, order = 1, nodes = V(v1)$name == "Players Agentur Management GmbH", mode ="all")
+ego_players <- ego_agency[[1]]
+ego_players
+
+V(ego_players)[V(ego_players)$name == "Players Agentur Management GmbH"]$frame.color <- "red" 
+# Der Knoten von Players Agentur Management GmbH wird nun rot umrandet
+
+plot(ego_players,
+     layout=layout_nicely,
+     main="Ego-Netzwerk von Players Agentur Management GmbH",
+     sub="ersten Grades",
+     vertex.color="lightblue",
+     vertex.label.color="black",
+     vertex.label.cex=1,
+     vertex.size=20)
+# Visualisierung des Ego-Netzwerkes von der Players Agentur Management GmbH
+
+```
+
+Da im Ego-Netzwerk ersten Grades keine Erkenntnisse gezogen werden konnten, lohnt es sich hier noch das Ego-Netzwerk zweiten Grades zu betrachten. In diesem Netzwerk werden die Schauspieler:innen nun mit ihren Filmen, Serien, Theatern und anderen Aktionen dargestellt, aber auch die Beziehungen zu anderen Schauspieler:innen.
+
+```{r Ego-Netzwerke Agentur Players zweiten Grades, fig.hight=30, fig.width=50}
+# Ego-Netzwerk der Players Agentur zweiten Grades
+ego_agency_2 <- make_ego_graph(v1, order = 2, nodes = V(v1)$name == "Players Agentur Management GmbH", mode ="all")
+ego_players_2 <- ego_agency_2[[1]]
+ego_players_2
+
+V(ego_players_2)[V(ego_players_2)$name == "Players Agentur Management GmbH"]$frame.color <- "red" 
+# Der Knoten von Players Agentur Management GmbH wird nun rot umrandet
+
+plot(ego_players_2,
+     layout=layout_nicely,
+     main="Ego-Netzwerk von Players Agentur Management GmbH",
+     sub="zweiten Grades",
+     vertex.color="lightblue",
+     vertex.label.color="black",
+     vertex.label.cex=2,
+     vertex.size=3,)
+# Visualisierung des Ego-Netzwerkes von der Players Agentur Management GmbH zweiten Grades
+
+```
+
+Um das Netzwerk etwas übersichtlicher zu machen, werden die zusätzlichen Schauspieler:innen, die nicht in direkter Verbindung zur Players Agentur stehen, aus dem Netzwerk gelöscht. In diesem Netzwerk werden nun nur noch die Beziehungen der Schauspieler über Filme, Serien, Theater und andere Aktionen dargestellt. Während über viele Filme keine Verbindung zu anderen Schauspieler:innen der Agentur besteht, gibt es über andere Filme, Serien, Theaterstücke und Aktionen doch einige Edges, die die Schauspieler:innen untereinander verbinden. Besonders viele Verbindungen zu anderen Schauspieler:innen der Agentur haben dabei Wotan Wilke Möhring, Maxim Mehmet, Inka Friedrichs, Volker Bruch und Trystan Pütter. Generell haben aber auch die anderen Schauspieler:innen der Agentur mehrere Verbindungen zu anderen Schauspieler:innen, es gibt keine:n Schauspieler:in der:die keine Verbindung zu einer anderen Person hat, dieses Netzwerk ist also in sich geschlossen.
+
+```{r Ego-Netzwerk Agentur Players zweiten Grades ohne Zusatz, fig.hight=30, fig.width=50}
+ego_players_2_solo <- delete.vertices(ego_players_2, c("Miriam Stein", "Heike Makatsch"))
+ego_players_2_solo
+# um bei den eigentlichen Schauspielern der Agentur zu bleiben, werden hier die Akteure Miriam Stein und Heike Makatsch aus dem Netzwerk gelöscht
+
+plot(ego_players_2_solo,
+     layout=layout_nicely,
+     main="Ego-Netzwerk von Players Agentur Management GmbH",
+     sub="zweiten Grades",
+     vertex.color="lightblue",
+     vertex.label.color="black",
+     vertex.label.cex=2,
+     vertex.size=3,)
+# Visualisierung des Ego-Netzwerkes zweiten Grades der Players Agentur ohne MS und HM
+
+```
+
+**Ego-Netzwerk Tatort – Murot und das Murmeltier**
+
+Neun Schauspieler:innen der Aktion #allesdichtmachen spielen in der Folge „Murot und das Murmeltier“ der Serie Tatort mit. Das ist verglichen mit der Gesamtzahl von 52 Schauspieler:innen bereits eine sehr hohe Anzahl. Daher ist es auch hier sinnvoll, ein Ego-Netzwerk zu erstellen.
+
+```{r Ego-Netzwerk Tatort: Murot, fig.hight=30, fig.width=50}
+# Ego-Netzwerk ersten Grades von Tatort: Murot und das Murmeltier 
+ego_episode <- make_ego_graph(v1, order = 1, nodes = V(v1)$name == "Tatort: Murot und das Murmeltier", mode ="all")
+ego_tatort <- ego_episode[[1]]
+ego_tatort
+
+
+V(ego_tatort)[V(ego_tatort)$name == "Tatort: Murot und das Murmeltier"]$frame.color <- "red" 
+# Der Knoten von Tatort: Murot und das Murmeltier wird nun rot umrandet
+
+plot(ego_tatort,
+     layout=layout_nicely,
+     main="Ego-Netzwerk von Tatort: Murot und das Murmeltier",
+     sub="ersten Grades",
+     vertex.color="lightblue",
+     vertex.label.color="black",
+     vertex.label.cex=2,
+     vertex.size=3,)
+# Visualisierung des Ego-Netzwerkes ersten Grades von Tatort: Murot und das Murmeltier
+```
+
+Spannend wird es aber erst im Ego-Netzwerk zweiten Grades, denn hier werden auch die Beziehungen der Schauspieler:innen untereinander über Verbindungen deutlich.
+
+```{r Ego-Netzwerk Tatort: Murot zweiten Grades, fig.hight=30, fig.width=50}
+# Ego-Netzwerk zweiten Grade von Tatort: Murot und das Murmeltier
+ego_episode_2 <- make_ego_graph(v1, order = 2, nodes = V(v1)$name == "Tatort: Murot und das Murmeltier", mode ="all")
+ego_tatort_2 <- ego_episode_2[[1]]
+ego_tatort_2
+
+V(ego_tatort_2)[V(ego_tatort_2)$name == "Tatort: Murot und das Murmeltier"]$frame.color <- "red" 
+# Der Knoten von Tatort: Murot und das Murmeltier wird nun rot umrandet
+
+plot(ego_tatort_2,
+     layout=layout_nicely,
+     main="Ego-Netzwerk von Tatort: Murot und das Murmeltier",
+     sub="zweiten Grades",
+     vertex.color="lightblue",
+     vertex.label.color="black",
+     vertex.label.cex=2,
+     vertex.size=3,)
+# Visualisierung des Ego-Netzwerkes zweiten Grades von Tatort: Murot und das Murmeltier
+```
+
+Zur einfacheren Analyse der Schauspieler:innen dieser Folge, muss auch hier wieder eine direkte Verbindung zu einem anderen Schauspieler (Joseph Konrad Bundschuh) gelöscht werden.  Hier lässt sich nun wieder schön erkennen, dass auch unter diesen Schauspieler:innen weitere Beziehungen über andere Aktionen bestehen. Lediglich Jens Wawrczeck hat keine weiteren Verbindungen. Somit steht seine Verbindung zu den Schauspieler:innen und damit auch der Aktion #allesdichtmachen lediglich über diese eine Tatort-Folge. Dennoch hat er damit zu neun der 52 Schauspieler:innen bereits eine Beziehung gehabt.
+
+```{r Ego-Netzwerk Tatort: Murot zweiten Grades solo, fig.hight=30, fig.width=50}
+ego_tatort_2_solo <- delete.vertices(ego_tatort_2, c("Joseph Konrad Bundschuh"))
+ego_tatort_2_solo
+# um bei den eigentlichen Schauspielern der Tatort-Folge zu bleiben, wird hier der Akteure Joseph Konrad Bundschuh aus dem Netzwerk gelöscht
+
+plot(ego_tatort_2_solo,
+     layout=layout_nicely,
+     main="Ego-Netzwerk von Tatort: Murot und das Murmeltier",
+     sub="zweiten Grades",
+     vertex.color="lightblue",
+     vertex.label.color="black",
+     vertex.label.cex=2,
+     vertex.size=3,)
+# Visualisierung des Ego-Netzwerkes zweiten Grades von Tatort: Murot und das Murmeltier ohne JKB
+```
+
+**Komponenten-Analyse**
+
+Unser Gesamtnetzwerk besteht aus zwei Komponenten. Während die größte dieser Komponenten aus 298 Akteur:innen besteht, hat die zweite nur eine Akteurin, die keine für uns bekannte Beziehung zu einem:r der anderen Akteur:innen hat. Die Recherche zu Verbindungen zwischen den Schauspieler:innen ist uns nur bis zu einem gewissen Grad möglich. Dass dabei nicht alle Verbindungen gefunden werden können ist somit unumgänglich. Für Claudia Rippe habe wir keine Verbindung zu einem der anderen Akteure des Projekts gefunden, weswegen sie bei unserer Netzwerkdarstellung ein Isolate ist.
+
+```{r Komponententeilung, include=FALSE}
+#Komponenten
+is.connected(v)# besteht das Netzwerk aus Komponenten? wenn ja, wie vielen? 
+components(v) 
+edge_density(v, loops=FALSE)## Dichte des Netzwerks 
+diameter(v)# Umfang des Netzwerks
+farthest_vertices(v)# Pfaddistanzen (Distance)
+```
+```{r Komponententeilung, fig.hight=30, fig.width=50}
+#cluster
+v_comp<-decompose.graph(v)
+v_comp1<- v_comp[[1]] # membership
+v_comp2<- v_comp[[2]]
+
+plot(v_comp1, 
+     vertex.color="grey80", 
+     vertex.size=3,
+     vertex.label.size=0.2,
+     main="Komponente 1",
+     sub="298 Akteure")
+plot(v_comp2, 
+     vertex.color="grey80", 
+     main="Komponente 2",
+     sub="1 Akteur")
+```
+**Cliquen**
+
+Die Cliquen-Analyse ergibt, dass die größten Cliquen unseres Netzwerks jeweils drei Akteur:innen verbinden. Es handelt sich also um Dreiecksbeziehung, also eine Beziehung zwischen drei Akteur:innen, die alle miteinander verbunden sind. In unserem Netzwerk ist dies nur der Fall, wenn die Schauspieler:innen eine direkte Verbindung zu einem:r anderen Schauspieler:in haben und diese beiden auch zusammen in einem Film, einer Serie oder einem Theaterstück zu sehen waren, sie eine gemeinsame Agentur haben oder gemeinsam an einem Projekt teilgenommen haben. Unser Netzwerk hat 18 solcher dreier Cliquen. Zwei der 18 Cliquen haben ein gemeinsamen Projekt, während eine Clique über eine gemeinsame Agentur entstanden ist. Alle anderen der Cliquen sind durch gemeinsame Filmprojekte entstanden. Heike Makatsch und Trystan Pütter sind dabei Teil von zwei verschiedenen Cliquen. Miriam Stein und Volker Bruch sowie Jörg Bundschuh und Joseph Konrad Bundschuh sind jeweils Teil von vier Cliquen. Auch hier stechen Martin Brambach und seine Frau Christine Sommer wieder besonders stark hervor, mit Verbindungen über acht Cliquen. Sie haben dabei also nicht nur eine private Verbindung und ein gemeinsames Video für die #allesdichtmachen-Kampagne gedreht, sondern arbeiten auch anderweitig im Beruf viel zusammen. Da es sich bei den hier genannten Schauspieler:innen um alle privaten Beziehungen (relation=3) in unserem Netzwerk handelt, lässt sich auch sagen, dass sich die Schauspieler :innen nicht nur durch Freundschaft oder Verwandtschaft kennen, sondern auch gemeinsam an Projekten teilgenommen, beruflich zusammengearbeitet und/oder eine gemeinsame Agentur haben. Beispielhaft werden hier drei der 18 Cliquen dargestellt.
+
+```{r Cliquen, include=FALSE}
+# Zählt die Cliquen im Netzwerk
+clique_num(v)
+
+# listet die Cliquen im Netzwerk auf
+lc <- largest_cliques(v)
+lc
+```
+
+```{r Cliquen visualisieren}
+# Umwandlung für Visualisierung Clique 1
+V(v)$label <- V(v)$name
+v_lc <- subgraph(v, lc[[1]])
+
+# Visualisierung der Clique 1
+plot(v_lc, 
+     layout=layout_with_kk, 
+     vertex.color="lightblue",
+     edge.color = "grey",
+     main = "Größte Clique 1")
+
+# Umwandlung für Visualisierung Clique 2
+V(v)$label <- V(v)$name
+v_lc <- subgraph(v, lc[[2]])
+
+# Visualisierung der Clique 2
+plot(v_lc, 
+     layout=layout_with_kk, 
+     vertex.color="lightblue",
+     edge.color = "grey",
+     main = "Größte Clique 2")
+# Umwandlung für Visualisierung Clique 3
+V(v)$label <- V(v)$name
+v_lc <- subgraph(v, lc[[3]])
+
+# Visualisierung der Clique 3
+plot(v_lc, 
+     layout=layout_with_kk, 
+     vertex.color="lightblue",
+     edge.color = "grey",
+     main = "Größte Clique 3")
+```
+
+**Cluster**
+
+Um auch bei der Cluster-Analyse genauere Ergebnisse zu erzielen, wurde zu Beginn erneut die Akteurin Claudia Rippe als Isolate aus dem Netzwerk entfernt. Es gibt nun also ein Cluster.
+
+Die Modulanalyse gibt jedoch noch einige andere Aufschlüsse. Es gibt 21 Communities, die zum Teil miteinander verbunden, zum Teil aber auch einzelne Akteur:innen sind. Auffällig ist hierbei, dass einige Communities nur zwei Akteur:innen beinhalten. Dies kommt daher, dass einige Schauspieler:innen nur über einen Film, Serie, Theaterstück, Projekt oder eine Agentur mit den anderen Schauspieler:innen verbunden sind. Die größte Community ist Community vier mit 77 Akteur:innen. Hier ist es besonders spannend, dass der Akteur mit den meisten Verbindungen (Martin Brambach) ebenfalls Teil dieser Community ist. Auch hier wird also deutlich, dass Martin Brambach einer der zentralen Akteur:innen in diesem Netzwerk ist. Aber auch die Community eins hat mit 41 Akteur:innen eine gewisse Größe. Es gibt aber auch sehr viele kleine Communities. Fünf der 22 (Community 12, 13, 14, 15 und 16) haben lediglich zwei Akteur:innen, weitere drei (Community 8, 19 und 20) haben vier Akteur:innen und eine (Community 17) hat fünf Akteur:innen. Die Modularität des Netzwerks beträgt etwa 0,48.
+
+```{r Prüfung verbundener Cluster, fig.hight=60, fig.width=100, include=FALSE}
+v2_2 <- delete.vertices(v2, c("Claudia Rippe")) # Claudia Rippe wird hier als Isolate entfernt um die Communities einfacher zu erkennen
+
+# Anzahl der Clusters
+clusters(v2_2)
+
+# Sind die Cluster miteinander verbunden?
+is_connected(v2_2)
+
+gc <- cluster_walktrap(v2_2)
+modularity(gc, weights = NULL)
+membership(gc)
+length(gc) # Anzahl der Module
+sizes(gc) # Zeigt die Größe der Module an
+```
+
+```{r Visualisierung Cluster, echo=TRUE}
+plot(gc, v2_2, 
+     layout= layout_nicely,
+     edge.arrow.size=.2,
+     vertex.label.size=0.005,
+     vertex.size=1,
+     main="Community-Netzwerk")
+
+```
+
+**Das Tatort-Netzwerk**
+ 
+Zusätzlich zum Gesamtnetzwerk, haben wir uns dazu entschieden ein abgesondertes Tatort-Netzwerk zu erstellen. Bei der Datenerhebung ist uns aufgefallen, dass besonders viele Akteur:innen der #allesdichtmachen-Kampagne in einem oder sogar in mehreren Tatorten mitgespielt haben, es darüber also besonders viele Verbindungen gibt. Von den insgesamt 52 Akteur:innen haben nur 13 noch nie in einem Tatort mitgespielt. Das Netzwerk hat 88 Knoten (52 Akteur:innen und 35 Tatortfolgen) und 83 Verbindungen. Es handelt sich um ein ungerichtetes Two-mode-Netzwerk. 
+
+
+```{r Tatort-Netzwerk einlesen, echo=FALSE, fig.height=30, fig.width=50, message=FALSE, warning=TRUE, paged.print=FALSE}
+library(tidyverse)
+library(igraph)
+# Erstellt das Netzwerk aus der Edge- und Nodelists. 
+
+# Einlesen der Edge- und Nodelist
+el <- read.csv("https://raw.githubusercontent.com/Pa020-svg/Tatort-2/main/Tatort%20-%20Edgelist.csv", header=T, as.is=T, sep = ",")
+nodes <- read.csv("https://raw.githubusercontent.com/Pa020-svg/Tatort-2/main/Tatort%20-%20Nodelist%20(1).csv", header=T, as.is=T, sep = ",")
+
+# Matrix erstellen
+edgematrix <-as.matrix(el)
+
+# Zusammenführen von Edge- und Nodelist als igraph-Objekt
+t <- graph_from_data_frame(d=edgematrix, vertices=nodes, directed=FALSE)
+
+
+#V Visualisierung des Netzwerks
+V(t)[V(t)$type == 1]$color <- "red" # Die Akteure werden rot angezeigt 
+V(t)[V(t)$type == 2]$color <- "lightblue" # Filme/Serien/Theaterstücke werden hellblau angezeigt
+V(t)[V(t)$type == 3]$color <- "pink" # Agenturen werden rosa angezeigt
+V(t)[V(t)$type == 4]$color <- "lightgreen" # Projekte und sonstige Akteure werden hellgrün angezeigt
+V(t)[V(t)$type == 1]$shape <- "circle" # Die Akteure werden als Kreis angezeigt
+V(t)[V(t)$type == 2]$shape <- "square" # Filme/Serien/Theaterstücke werden als Viereck angezeigt
+V(t)[V(t)$type == 3]$shape <- "square" # Agenture werden als Viereck angezeigt
+V(t)[V(t)$type == 4]$shape <- "square" # Projekte und sonstige Akteure werden als Viereck angezeigt
+V(t)$frame.color <-  "gray" # die Rahmenfarbe ist grau
+E(t)$color <- "grey60" # Die Kanten werden grau angezeigt
+
+plot(t, 
+     layout=layout_with_kk,
+     #vertex.label.cex = 0.002, 
+     vertex.label.color = "black",
+     vertex.size = 1,
+     asp = 0,
+     main="Tatort-Netzwerk")
+# hier wird das Netzwerk visualisiert
+```
+
+```{r Tatort-Netzwerk ohne Isolates, fig.height=30, fig.width=50}
+tatort<- delete_vertices(t, V(t)[Tatort!= "1"]) # Alle Schauspieler die nicht in einer Tatort-Folge mitgespielt haben
+
+plot(tatort, 
+     layout=layout_with_kk,
+     #vertex.label.cex = 0.002, 
+     vertex.label.color = "black",
+     vertex.size = 1,
+     asp = 0,
+     main="#Tatort",)
+# hier wird das Netzwerk visualisiert
+```
+
+Beim Betrachten des Tatort-Netzwerkes fällt auf, das es insgesamt ein sehr enges Netzwerk mit vielen Verbindungen ist. Martin Brambach, Felix Klare, Wotan Wilke Moehring und Maxim Mehmet stechen mit besonders vielen Verbindungen hervor. Das bestätigt also auch unsere Annahme von weiter oben, dass es interessant ist, das Ego-Netzwerk von Martin Brambach genauer anzuschauen. Auffällig sind außerdem die Tatort-Folgen „Murot und das Murmeltier“ und „Stau“, in denen besonders viele Schauspieler:innen der Kampagne mitgespielt haben. Auch von dem Tatort „Murot und das Murmeltier“ haben wir zusätzlich das Ego-Netzwerk betrachtet. 
+
+
+**Fazit**
+ 
+In unserem Gesamtnetzwerk konnten wir schon beim Visualisieren erste Auffälligkeiten erkennen, denen wir dann weiter nachgegangen sind. Der Großteil der Akteur:innen in unserem Gesamtnetzwerk sind beruflich miteinander verbunden, das bedeutet über gemeinsame Produktionen, wie Filme und Serien.
+ 
+Dabei ist besonders das Tatort-Netzwerk auffällig. Nur 13 von 52 Akteur:innen haben nicht gemeinsam in mindestens einer Tatort-Folge mitgewirkt. Außerdem ist es in dem Tatort-Netzwerk interessant anzumerken, dass gerade die Folgen „Murot und das Murmeltier“ und „Stau“ viele Akteur:innen miteinander verbindet. An der Folge „Murot und das Murmeltier“ haben 9 Akteur:innen mitgewirkt.
+ 
+Martin Brambach ist einer der zentralen Akteur:innen im Gesamtnetzwerk und hat hier 49 Verbindungen, dies ist die höchste Anzahl an Verbindungen im Gesamtnetzwerk. Auch im Netzwerk der Tatort-Folgen spielt er eine zentrale Rolle, da er in acht Tatort-Folgen mitwirkt, die ihn mit anderen Akteur:innen im Netzwerk verbinden. Ebenfalls auffällig ist Martin Brambach bei der Verfügbarkeit der Videos. Etwa die Hälfte der Akteur:innen haben ihr Video wieder zurückgezogen, beziehungsweise offline gestellt (Stand 13. September). Martin Brambach hat beide Videos, an denen er mitgewirkt hat, offline gestellt. Dabei ist auch das Video, das er gemeinsam mit seiner Partnerin, Christine Sommer, veröffentlicht hat, offline. Das Video von Christine Sommer hingegen ist noch öffentlich zugänglich. Das Ehepaar stellt hierbei eine Ausnahme dar, da die Akteure, die durch Verwandtschaft oder Lebenspartnerschaften miteinander verbunden sind, einheitlich ihre Videos offline oder online.
+ 
+Berlin ist der häufigste Erstwohnsitz der Akteur:innen der Aktion #allesdichtmachen. Etwa ein Drittel der Mitwirkenden lebt in Berlin, somit ist anzunehmen, dass sich viele über dieses Heimatstadt-Netzwerk kennen. Auch Dietrich Brüggemann, der als einer der Initiatoren der Aktion gilt, hat hier seinen Hauptwohnsitz. Die Players Agentur aus Berlin, ist die Agentur mit den meisten Verbindungen und das Ego-Netzwerk der Agentur ist in sich geschlossen. Die Agentur ist außerdem über Wotan Wilke Möhring mit der Agentur Publics PR & Management verbunden. Die anderen Agenturen verbinden jeweils nur zwei bis drei Akteur:innen miteinander.
+ 
+Abschließend ist anzunehmen, dass viele der Akteur:innen sich über Tatort-Produktionen oder die gemeinsame Heimatstadt Berlin kennen und so auch Mitwirkende der Aktion #allesdichtmachen wurden.
+
+
+**Teamreflexion** 
+
+Insgesamt waren wir mit unserer Zusammenarbeit im Team sehr zufrieden. Da unser Team aus sechs Menschen besteht, war die Terminfindung manchmal etwas schwierig. Dadurch konnten wir lernen, dass es oft sinnvoll ist, Aufgaben aufzuteilen und dann die einzelnen Teile zusammen zu tragen. Trotzdem waren regelmäßige Treffen sinnvoll und effizient, damit alle wieder auf dem gleichen Stand waren und Fragen geklärt werden konnten. Bei der Aufgabenverteilung haben wir darauf geachtet, dass jede von uns ihrer Fähigkeiten entsprechende Aufgaben übernommen hat. Das werden wir auch für den edit-Artikel wieder so handhaben, da diese Methode für uns alle eine gute Lösung ist. Bei ein paar Kleinigkeiten haben wir in den Update-Treffen gemerkt, dass die anfängliche Absprache wirklich sehr wichtig ist und alle genau verstehen, was zu tun ist. In so einem großen Team ist es uns auch manchmal passiert, dass wir aneinander vorbeigeredet haben. Wir können aber abschließend sagen, dass wir alle mit dem Ergebnis unserer Arbeit zufrieden sind und wir das Gefühl haben, das Jede sich Ihren Stärken entsprechend ins Team eingebracht hat.
